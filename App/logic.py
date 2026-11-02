@@ -96,6 +96,22 @@ def update_area_index(map, crime):
     y si el area son ["", " ", None] se utiliza el valor por defecto 9999
     """
     # TODO Implementar actualizacion del indice por areas reportadas
+    area = crime.get("REPORTING_AREA")
+    if area is None or area == "" or area == " ":
+        area = 9999
+    else:
+        try:
+            area = int(area)
+        except ValueError:
+            pass
+
+    entry = rbt.get(map, area)
+    if entry is None:
+        datentry = al.new_list()
+        al.add_last(datentry, crime)
+        rbt.put(map, area, datentry)
+    else:
+        al.add_last(entry, crime)
     return map
 
 
@@ -209,7 +225,7 @@ def index_height_areas(analyzer):
     Altura del arbol por areas
     """
     # TODO Retornar la altura del árbol por areas
-    pass
+    return rbt.height(analyzer["areaIndex"])
 
 
 def index_size_areas(analyzer):
@@ -217,7 +233,7 @@ def index_size_areas(analyzer):
     Numero de elementos en el indice por areas
     """
     # TODO Retornar el numero de elementos en el árbol por areas
-    pass
+    return rbt.size(analyzer["areaIndex"])
 
 
 def min_key_areas(analyzer):
@@ -225,7 +241,7 @@ def min_key_areas(analyzer):
     Llave mas pequena por areas
     """
     # TODO Retornar la llave más pequeña del árbol por áreas
-    pass
+    return rbt.left_key(analyzer["areaIndex"])
 
 
 def max_key_areas(analyzer):
@@ -233,15 +249,26 @@ def max_key_areas(analyzer):
     Llave mas grande por areas
     """
     # TODO Retornar la llave más grande del árbol por áreas
-    pass
+    return rbt.right_key(analyzer["areaIndex"])
 
 def get_crimes_by_range_area(analyzer, initialArea, finalArea):
     """
     Retorna el numero de crimenes en un rango de areas
     """
     # TODO Completar la consulta de crimenes por rango de areas
+    try:
+        initialArea = int(initialArea)
+        finalArea = int(finalArea)
+    except ValueError:
+        pass
+
+    lst = rbt.values(analyzer["areaIndex"], initialArea, finalArea)
     totalcrimes = 0
+    if lst and "elements" in lst:
+        for lstdate in lst["elements"]:
+            totalcrimes += al.size(lstdate)
     return totalcrimes
+
 
 def get_crimes_by_range(analyzer, initialDate, finalDate):
     """
