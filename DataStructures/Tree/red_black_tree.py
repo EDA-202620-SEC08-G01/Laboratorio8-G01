@@ -1,5 +1,6 @@
 import rbt_node as rbt
 from DataStructures.List import array_list as al
+from DataStructures.List import single_linked_list as sl
 
 def default_compare(a, b):
     
@@ -107,3 +108,46 @@ def value_set(my_node):
     value_set = al.new_list()
     return value_set_tree(my_node, value_set)
 
+def get_min_node(root):
+    if root is None:
+        return None
+    elif root["left"] is None:
+        return rbt.get_key(root)
+    else:
+        return get_min_node(root["left"])
+
+def get_min(my_rbt):
+    return get_min_node(my_rbt["root"])
+
+def get_max_node(root):
+    if root is None:
+        return None
+    elif root["right"] is None:
+        return rbt.get_key(root)
+    else:
+        return get_max_node(root["right"])
+
+def get_max(my_rbt):
+    return get_max_node(my_rbt["root"])
+
+def values_range(root, key_initial, key_final, value_list):
+    if root is None:
+        return value_list
+
+    key = rbt.get_key(root)
+
+    if key_initial < key:
+        values_range(root["left"], key_initial, key_final, value_list)
+
+    if key_initial <= key <= key_final:
+        sl.add_last(value_list, rbt.get_value(root))
+
+    if key < key_final:
+        values_range(root["right"], key_initial, key_final, value_list)
+
+    return value_list
+
+def values(my_rbt, key_initial, key_final):
+    value_list = sl.new_list()
+    values_range(my_rbt["root"], key_initial, key_final, value_list)
+    return value_list

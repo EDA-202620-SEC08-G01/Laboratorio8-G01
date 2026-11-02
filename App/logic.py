@@ -28,6 +28,10 @@ import os
 import csv
 import datetime
 from DataStructures.Tree import red_black_tree as rbt
+from DataStructures.List import array_list as al
+from DataStructures.List import single_linked_list as sl
+from DataStructures.Map import map_linear_probing as lp
+from DataStructures.Map import map_separate_chaining as sp
 
 # TODO Realice la importación del Árbol Rojo Negro
 # TODO Realice la importación de ArrayList (al) o SingleLinked (sl) como estructura de datos auxiliar para sus requerimientos
@@ -54,7 +58,6 @@ def new_logic():
     analyzer["crimes"] = al.new_list()
     analyzer["dateIndex"] = rbt.new_map()
     analyzer["areaIndex"] = rbt.new_map()
-    # TODO Crear el índice ordenado por áreas reportadas
     return analyzer
 
 # Funciones para realizar la carga
@@ -82,7 +85,7 @@ def add_crime(analyzer, crime):
     al.add_last(analyzer['crimes'], crime)
     update_date_index(analyzer['dateIndex'], crime)
     # TODO Actualizar el indice por areas reportadas
-
+    update_area_index(analyzer["areaIndex"], crime)
     return analyzer
 
 def update_area_index(map, crime):
